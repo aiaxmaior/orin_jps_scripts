@@ -1,0 +1,69 @@
+################################################################################
+# DeepStream Single Camera - Using V4L2 interface instead of nvarguscamera
+################################################################################
+
+[application]
+enable-perf-measurement=1
+perf-measurement-interval-sec=5
+
+[tiled-display]
+enable=1
+rows=1
+columns=1
+width=640
+height=360
+gpu-id=0
+
+# Source 0: IMX219 via V4L2
+[source0]
+enable=5
+# Type: 1=CameraV4L2 (instead of 5=CSI)
+type=1
+camera-v4l2-dev-node=0
+camera-width=1280
+camera-height=720
+camera-fps-n=30
+camera-fps-d=1
+
+# Display Sink
+[sink0]
+enable=1
+type=2
+sync=0
+
+# File recording (disabled)
+[sink1]
+enable=0
+type=3
+container=1
+codec=1
+enc-type=0
+sync=0
+bitrate=4000000
+output-file=csi_camera_output.mp4
+
+[osd]
+enable=1
+border-width=3
+text-size=15
+text-color=1;1;1;1;
+text-bg-color=0.3;0.3;0.3;1
+font=Arial
+
+[streammux]
+live-source=1
+batch-size=1
+batched-push-timeout=40000
+# Downscaled to 640x360 via VIC
+width=640
+height=360
+
+# Primary detector
+[primary-gie]
+enable=1
+gie-unique-id=1
+batch-size=1
+config-file=config_infer_primary_nano.txt
+
+[tests]
+file-loop=0
